@@ -1,0 +1,12 @@
+# Ignore IDE settings
+.idea/
+
+# Ignore build output
+/target/
+
+# Ignore logs and temp files
+*.log
+*.tmp
+
+# Ignore compiled files
+*.class
