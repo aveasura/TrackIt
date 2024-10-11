@@ -40,7 +40,6 @@ public class InMemoryHabitRepository implements HabitRepository {
 
     @Override
     public void update(int userId, Habit updatedHabit) {
-        // Находим пользователя по userId
         User user = findUserById(userId);
 
         if (user != null) {
@@ -49,7 +48,6 @@ public class InMemoryHabitRepository implements HabitRepository {
             if (habits != null) {
                 for (Habit habit : habits) {
                     if (habit.getId() == updatedHabit.getId()) {
-                        // Обновляем поля привычки
                         habit.setName(updatedHabit.getName());
                         habit.setDescription(updatedHabit.getDescription());
 //                        habit.setStatus(updatedHabit.getStatus());
@@ -91,7 +89,6 @@ public class InMemoryHabitRepository implements HabitRepository {
                 return user;
             }
         }
-        // если не найден
         return null;
     }
 
