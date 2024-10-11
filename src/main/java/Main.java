@@ -8,10 +8,9 @@ import user.service.UserService;
 public class Main {
     public static void main(String[] args) {
         UserRepository userRepository = new InMemoryUserRepository();
-        UserService userService = new UserService(userRepository);
-//        UserController userController = new UserController(userService);
-
         InMemoryHabitRepository habitRepository = new InMemoryHabitRepository();
+
+        UserService userService = new UserService(userRepository);
         HabitService habitService = new HabitService(habitRepository);
 
         UserController userController = new UserController(userService, habitService);

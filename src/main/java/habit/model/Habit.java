@@ -19,7 +19,7 @@ public class Habit {
         this.user = user;
     }
 
-    // Конструктор без id, для новых привычек
+
     public Habit(String name, String description, String frequency, User user) {
         this.name = name;
         this.description = description;
@@ -69,9 +69,8 @@ public class Habit {
 
     @Override
     public String toString() {
-        return "Habit{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+        return "Habit id=" + id +
+                ", title ='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", frequency='" + frequency + '\'' +
                 ", user=" + user +
@@ -83,12 +82,11 @@ public class Habit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Habit habit = (Habit) o;
-        return id == habit.id && Objects.equals(name, habit.name) && Objects.equals(description, habit.description)
-                && Objects.equals(frequency, habit.frequency) && Objects.equals(user, habit.user);
+        return Objects.equals(name, habit.name) && Objects.equals(description, habit.description) && Objects.equals(frequency, habit.frequency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, frequency, user);
+        return Objects.hash(name, description, frequency);
     }
 }

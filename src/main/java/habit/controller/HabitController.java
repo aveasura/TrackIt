@@ -8,38 +8,37 @@ import java.util.Scanner;
 
 // todo доделать логику/методы
 public class HabitController {
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     private HabitService habitService;
-
-    public HabitController(HabitService habitService) {
-        this.habitService = habitService;
-    }
-
+    private User loggedUser;
     String choice;
 
-    // меню управления привычками.
+    public HabitController(HabitService habitService, User loggedUser) {
+        this.habitService = habitService;
+        this.loggedUser = loggedUser;
+        this.scanner = new Scanner(System.in);
+    }
+
     public void showHabitMenu(User loggedUser) {
         System.out.println("Habit Manager\n" +
-                "Choose what needs to be done:" +
-                """
+                "Choose what needs to be done:\n" + """
                         1. Create habit
-                        2. Read habit info
+                        2. Show my habits
                         3. Update habit
                         4. Delete habit
-                        5. Show my all habits
                         """);
         choice = scanner.nextLine();
 
         switch (choice) {
-            case "1" -> createHabit(loggedUser);
-            case "2" -> readHabitInfo(loggedUser);
+            case "1" -> createHabit();
+            case "2" -> myHabits();
             case "3" -> updateHabit();
             case "4" -> deleteHabit();
-            case "5" -> showAllUserHabits();
+            default -> System.out.println("Wrong choice");
         }
     }
 
-    private void createHabit(User loggedUser) {
+    private void createHabit() {
         System.out.println("Habit title");
         String title = scanner.nextLine();
         System.out.println("Habit description");
@@ -53,19 +52,42 @@ public class HabitController {
         System.out.println("Habit created");
     }
 
-    private void readHabitInfo(User loggedUser) {
-        Habit habit = habitService.read(loggedUser.getId());
-        System.out.println(habit);
-    }
-
     private void updateHabit() {
+        System.out.print("Enter habit ID to update: ");
+        myHabits();
+
+        int habitId = Integer.parseInt(scanner.nextLine());
+        Habit habitToUpdate = habitService.habitInfo(habitId);
+
+        if (habitToUpdate == null || habitToUpdate.getUser().getId() != loggedUser.getId()) {
+            System.out.println("Habit not found or does not belong to you.");
+            return;
+        }
+
+        System.out.print("Enter new title for the habit: ");
+        choice = scanner.nextLine();
+        habitToUpdate.setName(choice);
+
+        System.out.print("Enter new description for the habit: ");
+        choice = scanner.nextLine();
+        habitToUpdate.setDescription(choice);
+
+        System.out.print("Enter new frequency for the habit: ");
+        choice = scanner.nextLine();
+        habitToUpdate.setDescription(choice);
+
+        habitService.updateHabit(loggedUser, habitToUpdate.getId());
     }
 
     private void deleteHabit() {
+        System.out.println("Choice id habit for delete");
+        myHabits();
+        int habitId = Integer.parseInt(scanner.nextLine());
+        habitService.deleteHabit(loggedUser, habitId);
     }
 
-    private void showAllUserHabits() {
+    private void myHabits() {
+        System.out.println("\nAll your habits:");
+        habitService.readAllUserHabits(loggedUser);
     }
-
-
 }

@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 
 public class UserController {
-    private static Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     private UserService userService;
     private HabitService habitService;
 
@@ -19,6 +19,7 @@ public class UserController {
     public UserController(UserService userService, HabitService habitService) {
         this.userService = userService;
         this.habitService = habitService;
+        this.scanner = new Scanner(System.in);
     }
 
     public void run() {
@@ -151,7 +152,7 @@ public class UserController {
 
 
     private void manageHabits() {
-        HabitController habitController = new HabitController(habitService);
+        HabitController habitController = new HabitController(habitService, loggedInUser);
         habitController.showHabitMenu(loggedInUser);
     }
 }
