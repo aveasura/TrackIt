@@ -19,7 +19,7 @@ public class HabitController {
         this.scanner = new Scanner(System.in);
     }
 
-    public void showHabitMenu(User loggedUser) {
+    public void showHabitMenu() {
         System.out.println("Habit Manager\n" +
                 "Choose what needs to be done:\n" + """
                         1. Create habit

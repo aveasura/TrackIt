@@ -153,6 +153,6 @@ public class UserController {
 
     private void manageHabits() {
         HabitController habitController = new HabitController(habitService, loggedInUser);
-        habitController.showHabitMenu(loggedInUser);
+        habitController.showHabitMenu();
     }
 }
