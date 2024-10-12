@@ -1,13 +1,13 @@
 package habit.repository;
 
 import habit.model.Habit;
+
+import java.time.LocalDate;
 import java.util.*;
 
 public class InMemoryHabitRepository implements HabitRepository {
-
     private final Map<Integer, Set<Habit>> userHabits = new HashMap<>();
     private int habitIdCounter;
-
 
     @Override
     public void create(int userId, Habit habit) {
@@ -67,6 +67,26 @@ public class InMemoryHabitRepository implements HabitRepository {
         } else {
             System.out.println("No habits found for the user.");
         }
+    }
+
+    @Override
+    public void markHabitCompletion(int userId, int habitId, LocalDate date) {
+        Habit habit = read(habitId);
+        if (habit != null && habit.getUser().getId() == userId) {
+            habit.markCompletion(date);
+            System.out.println("Habit marked as completed for date: " + date);
+        } else {
+            System.out.println("Habit not found or does not belong to the user.");
+        }
+    }
+
+    @Override
+    public List<LocalDate> getHabitCompletionHistory(int habitId) {
+        Habit habit = read(habitId);
+        if (habit != null) {
+            return habit.getCompletionHistory();
+        }
+        return Collections.emptyList();
     }
 
 }

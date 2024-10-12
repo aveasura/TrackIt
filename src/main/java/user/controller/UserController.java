@@ -1,7 +1,9 @@
 package user.controller;
 
 import habit.controller.HabitController;
+import habit.service.HabitAnalyticsService;
 import habit.service.HabitService;
+import habit.service.HabitTrackingService;
 import user.model.User;
 import user.service.UserService;
 
@@ -11,18 +13,24 @@ public class UserController {
     private Scanner scanner;
     private UserService userService;
     private HabitService habitService;
+    private HabitTrackingService trackingService;
+    private HabitAnalyticsService analyticsService;
 
     private User loggedInUser;
     private String choice;
 
-    public UserController(UserService userService, HabitService habitService) {
+    public UserController(UserService userService, HabitService habitService,
+                          HabitTrackingService trackingService,
+                          HabitAnalyticsService analyticsService) {
+
         this.userService = userService;
         this.habitService = habitService;
         this.scanner = new Scanner(System.in);
+        this.trackingService = trackingService;
+        this.analyticsService = analyticsService;
     }
 
     public void run() {
-
         while (true) {
             System.out.println("Choose an option: ");
             System.out.println("1. Registration\n2. Login\n3. Exit");
@@ -149,8 +157,8 @@ public class UserController {
         }
     }
 
-    private void manageHabits() {
-        HabitController habitController = new HabitController(habitService, loggedInUser);
+    public void manageHabits() {
+        HabitController habitController = new HabitController(habitService, loggedInUser, trackingService, analyticsService);
         habitController.showHabitMenu();
     }
 }

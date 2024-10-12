@@ -3,9 +3,7 @@ package habit.service;
 import habit.model.Habit;
 import habit.repository.HabitRepository;
 import user.model.User;
-
 import java.util.List;
-
 
 public class HabitService {
     private HabitRepository habitRepository;

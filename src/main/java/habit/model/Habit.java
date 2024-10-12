@@ -2,7 +2,8 @@ package habit.model;
 
 import user.model.User;
 
-import java.util.Objects;
+import java.time.LocalDate;
+import java.util.*;
 
 public class Habit {
     private int id;
@@ -10,21 +11,22 @@ public class Habit {
     private String description;
     private String frequency;
     private User user;
+    private List<LocalDate> completionHistory;
 
-    public Habit(int id, String name, String description, String frequency, User user) {
+    public Habit(String name, String description, String frequency, User user) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.frequency = frequency;
         this.user = user;
+        this.completionHistory = new ArrayList<>();
     }
 
-
-    public Habit(String name, String description, String frequency, User user) {
-        this.name = name;
-        this.description = description;
-        this.frequency = frequency;
-        this.user = user;
+    public void markCompletion(LocalDate date) {
+        if (completionHistory == null) {
+            completionHistory = new ArrayList<>(); // Инициализация, если еще не сделано
+        }
+        completionHistory.add(date);
     }
 
     public int getId() {
@@ -67,13 +69,23 @@ public class Habit {
         this.user = user;
     }
 
+    public List<LocalDate> getCompletionHistory() {
+        return completionHistory;
+    }
+
+    public void setCompletionHistory(List<LocalDate> completionHistory) {
+        this.completionHistory = completionHistory;
+    }
+
     @Override
     public String toString() {
-        return "Habit id=" + id +
-                ", title ='" + name + '\'' +
+        return "Habit{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", frequency='" + frequency + '\'' +
                 ", user=" + user +
+                ", completionHistory=" + completionHistory +
                 '}';
     }
 
@@ -82,11 +94,15 @@ public class Habit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Habit habit = (Habit) o;
-        return Objects.equals(name, habit.name) && Objects.equals(description, habit.description) && Objects.equals(frequency, habit.frequency);
+        return id == habit.id && Objects.equals(name, habit.name) &&
+                Objects.equals(description, habit.description) &&
+                Objects.equals(frequency, habit.frequency) &&
+                Objects.equals(user, habit.user) &&
+                Objects.equals(completionHistory, habit.completionHistory);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, frequency);
+        return Objects.hash(id, name, description, frequency, user, completionHistory);
     }
 }
