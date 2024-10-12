@@ -7,7 +7,6 @@ import user.service.UserService;
 
 import java.util.Scanner;
 
-
 public class UserController {
     private Scanner scanner;
     private UserService userService;
@@ -149,7 +148,6 @@ public class UserController {
             default -> System.out.println("You need to select yes or no");
         }
     }
-
 
     private void manageHabits() {
         HabitController habitController = new HabitController(habitService, loggedInUser);

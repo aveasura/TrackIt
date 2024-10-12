@@ -1,24 +1,18 @@
 package habit.repository;
 
 import habit.model.Habit;
-import user.model.User;
+import java.util.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-// todo доделать методы
 public class InMemoryHabitRepository implements HabitRepository {
 
-    private final Map<User, Set<Habit>> userHabits = new HashMap<>();
+    private final Map<Integer, Set<Habit>> userHabits = new HashMap<>();
     private int habitIdCounter;
 
 
     @Override
-    public void create(User user, Habit habit) {
+    public void create(int userId, Habit habit) {
         habit.setId(habitIdCounter++);
-        userHabits.computeIfAbsent(user, k -> new HashSet<>()).add(habit);
+        userHabits.computeIfAbsent(userId, k -> new HashSet<>()).add(habit);
     }
 
     @Override
@@ -31,65 +25,48 @@ public class InMemoryHabitRepository implements HabitRepository {
     }
 
     @Override
-    public void readAllByUserId(int userId) {
-        userHabits.entrySet().stream()
-                .filter(entry -> entry.getKey().getId() == userId)
-                .flatMap(entry -> entry.getValue().stream())
-                .forEach(System.out::println);
+    public List<Habit> readAllByUserId(int userId) {
+        return new ArrayList<>(userHabits.getOrDefault(userId, Collections.emptySet()));
     }
 
     @Override
     public void update(int userId, Habit updatedHabit) {
-        User user = findUserById(userId);
+        Set<Habit> habits = userHabits.get(userId);
 
-        if (user != null) {
-            Set<Habit> habits = userHabits.get(user);
-
-            if (habits != null) {
-                for (Habit habit : habits) {
-                    if (habit.getId() == updatedHabit.getId()) {
-                        habit.setName(updatedHabit.getName());
-                        habit.setDescription(updatedHabit.getDescription());
-//                        habit.setStatus(updatedHabit.getStatus());
-                        System.out.println("Habit updated successfully");
-                        return;
-                    }
+        if (habits != null) {
+            for (Habit habit : habits) {
+                if (habit.getId() == updatedHabit.getId()) {
+                    habit.setName(updatedHabit.getName());
+                    habit.setDescription(updatedHabit.getDescription());
+                    System.out.println("Habit updated successfully");
+                    return;
                 }
-                System.out.println("Habit not found.");
-            } else {
-                System.out.println("No habits found for the user");
             }
+            System.out.println("Habit not found.");
         } else {
-            System.out.println("User not found.");
+            System.out.println("No habits found for the user.");
         }
     }
 
-
     @Override
     public void delete(int userId, Habit habit) {
-        User user = findUserById(userId);
+        Set<Habit> habits = userHabits.get(userId);
 
-        if (user != null) {
-            Set<Habit> habits = userHabits.get(user);
+        if (habits != null) {
+            Habit habitToDelete = habits.stream()
+                    .filter(h -> h.getId() == habit.getId())
+                    .findFirst()
+                    .orElse(null);
 
-            if (habits != null && habits.contains(habit)) {
-                habits.remove(habit);
+            if (habitToDelete != null) {
+                habits.remove(habitToDelete);
                 System.out.println("Habit successfully deleted.");
             } else {
                 System.out.println("Habit not found for the user.");
             }
         } else {
-            System.out.println("User not found.");
+            System.out.println("No habits found for the user.");
         }
-    }
-
-    public User findUserById(int userId) {
-        for (User user : userHabits.keySet()) {
-            if (user.getId() == userId) {
-                return user;
-            }
-        }
-        return null;
     }
 
 }

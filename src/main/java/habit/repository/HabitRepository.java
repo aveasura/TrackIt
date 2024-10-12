@@ -3,12 +3,14 @@ package habit.repository;
 import habit.model.Habit;
 import user.model.User;
 
+import java.util.List;
+
 public interface HabitRepository {
-    void create(User user, Habit habit);
+    void create(int userId, Habit habit);
 
     Habit read(int habitId);
 
-    void readAllByUserId(int userId);
+    List<Habit> readAllByUserId(int userId);
 
     void update(int userId, Habit habit);
 

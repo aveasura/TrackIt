@@ -4,9 +4,9 @@ import habit.model.Habit;
 import habit.service.HabitService;
 import user.model.User;
 
+import java.util.List;
 import java.util.Scanner;
 
-// todo доделать логику/методы
 public class HabitController {
     private Scanner scanner;
     private HabitService habitService;
@@ -74,9 +74,9 @@ public class HabitController {
 
         System.out.print("Enter new frequency for the habit: ");
         choice = scanner.nextLine();
-        habitToUpdate.setDescription(choice);
+        habitToUpdate.setFrequency(choice);
 
-        habitService.updateHabit(loggedUser, habitToUpdate.getId());
+        habitService.updateHabit(loggedUser, habitToUpdate);
     }
 
     private void deleteHabit() {
@@ -87,7 +87,7 @@ public class HabitController {
     }
 
     private void myHabits() {
-        System.out.println("\nAll your habits:");
-        habitService.readAllUserHabits(loggedUser);
+        List<Habit> habits = habitService.readAllUserHabits(loggedUser);
+        habits.forEach(System.out::println);
     }
 }

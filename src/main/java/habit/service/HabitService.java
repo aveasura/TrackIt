@@ -4,6 +4,8 @@ import habit.model.Habit;
 import habit.repository.HabitRepository;
 import user.model.User;
 
+import java.util.List;
+
 
 public class HabitService {
     private HabitRepository habitRepository;
@@ -12,28 +14,30 @@ public class HabitService {
         this.habitRepository = habitRepository;
     }
 
-    // todo доделать методы + проверки
     public void create(User loggedUser, Habit habit) {
-        habitRepository.create(loggedUser, habit);
+        habitRepository.create(loggedUser.getId(), habit);
     }
 
     public Habit habitInfo(int id) {
         return habitRepository.read(id);
     }
 
-    public void readAllUserHabits(User loggedUser) {
-        habitRepository.readAllByUserId(loggedUser.getId());
+    public List<Habit> readAllUserHabits(User loggedUser) {
+        return habitRepository.readAllByUserId(loggedUser.getId());
     }
 
-    public void updateHabit(User loggedUser, int habitId) {
-        Habit habit = habitRepository.read(habitId);
-        habitRepository.update(loggedUser.getId(), habit);
+
+    public void updateHabit(User loggedUser, Habit updatedHabit) {
+        habitRepository.update(loggedUser.getId(), updatedHabit);
     }
 
     public void deleteHabit(User user, int habitId) {
         Habit habit = habitRepository.read(habitId);
 
-        // check null
+        if (habit == null || habit.getUser().getId() != user.getId()) {
+            System.out.println("Habit not found or does not belong to the user.");
+            return;
+        }
 
         habitRepository.delete(user.getId(), habit);
     }
