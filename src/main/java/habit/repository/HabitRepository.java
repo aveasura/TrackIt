@@ -1,8 +1,6 @@
 package habit.repository;
 
 import habit.model.Habit;
-import user.model.User;
-
 import java.util.List;
 
 public interface HabitRepository {
